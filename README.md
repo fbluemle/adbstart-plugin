@@ -16,11 +16,11 @@ and then launches the app via adb using the Gradle-resolved applicationId
 
 ```groovy
 pluginManagement {
-  repositories {
-    gradlePluginPortal()
-    google()
-    mavenCentral()
-  }
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
 }
 ```
 
@@ -28,17 +28,17 @@ pluginManagement {
 
 ```groovy
 plugins {
-  id 'com.android.application'
-  id 'org.fbluemle.adbstart'
+    id 'com.android.application'
+    id 'org.fbluemle.adbstart'
 }
 ```
 
-```
+```groovy
 adbStart {
-  activity = '.MainActivity'   // or fully qualified name
-  // deviceSerial = 'emulator-5554'
-  // extraAmArgs = '-W'
-  // adbPath = 'adb'
+    activity = '.MainActivity'   // or fully qualified name
+    // deviceSerial = 'emulator-5554'
+    // extraAmArgs = '-W'
+    // adbPath = 'adb'
 }
 ```
 

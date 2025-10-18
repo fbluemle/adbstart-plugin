@@ -1,32 +1,32 @@
 plugins {
-  id 'java-gradle-plugin'
-  id 'com.gradle.plugin-publish' version '2.0.0'
+    id 'java-gradle-plugin'
+    id 'com.gradle.plugin-publish' version '2.0.0'
 }
 
 group = 'org.fbluemle'
 version = '0.2.0'
 
 repositories {
-  google()
-  mavenCentral()
+    google()
+    mavenCentral()
 }
 
 dependencies {
-  compileOnly 'com.android.tools.build:gradle:8.6.0'
-  testImplementation gradleTestKit()
-  testImplementation 'junit:junit:4.13.2'
+    compileOnly 'com.android.tools.build:gradle:8.6.0'
+    testImplementation gradleTestKit()
+    testImplementation 'junit:junit:4.13.2'
 }
 
 gradlePlugin {
-  website = 'https://github.com/fbluemle/adbstart-plugin'
-  vcsUrl  = 'https://github.com/fbluemle/adbstart-plugin'
-  plugins {
-    adbStart {
-      id = 'org.fbluemle.adbstart'
-      implementationClass = 'org.fbluemle.adbstart.AdbStartPlugin'
-      displayName = 'ADB Start for Android/RN'
-      description = 'Adds start<Variant> tasks that install & launch the correct Android applicationId via adb.'
-      tags.set(['android','react-native','adb','variants'])
+    website = 'https://github.com/fbluemle/adbstart-plugin'
+    vcsUrl = 'https://github.com/fbluemle/adbstart-plugin'
+    plugins {
+        adbStart {
+            id = 'org.fbluemle.adbstart'
+            implementationClass = 'org.fbluemle.adbstart.AdbStartPlugin'
+            displayName = 'ADB Start for Android/RN'
+            description = 'Adds start<Variant> tasks that install & launch the correct Android applicationId via adb.'
+            tags.set(['android', 'react-native', 'adb', 'variants'])
+        }
     }
-  }
 }
