@@ -1,17 +1,16 @@
 package org.fbluemle;
 
-import org.gradle.testfixtures.ProjectBuilder;
 import org.gradle.api.Project;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.gradle.testfixtures.ProjectBuilder;
+import org.junit.Test;
 
-class AdbstartPluginPluginTest {
-    @Test void pluginRegistersATask() {
-        // Create a test project and apply the plugin
+import static org.junit.Assert.*;
+
+public class AdbstartPluginPluginTest {
+    @Test
+    public void pluginAppliesAndCreatesExtension() {
         Project project = ProjectBuilder.builder().build();
-        project.getPlugins().apply("org.example.greeting");
-
-        // Verify the result
-        assertNotNull(project.getTasks().findByName("greeting"));
+        project.getPlugins().apply("org.fbluemle.adbstart");
+        assertNotNull(project.getExtensions().findByName("adbStart"));
     }
 }

@@ -1,46 +1,32 @@
 plugins {
-    id 'java-gradle-plugin'
+  id 'java-gradle-plugin'
+  id 'com.gradle.plugin-publish' version '2.0.0'
 }
 
+group = 'org.fbluemle'
+version = '0.1.0'
+
 repositories {
-    mavenCentral()
+  google()
+  mavenCentral()
 }
 
 dependencies {
-    testImplementation libs.junit.jupiter
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+  compileOnly 'com.android.tools.build:gradle:8.6.0'
+  testImplementation gradleTestKit()
+  testImplementation 'junit:junit:4.13.2'
 }
 
 gradlePlugin {
-    plugins {
-        greeting {
-            id = 'org.example.greeting'
-            implementationClass = 'org.example.AdbstartPluginPlugin'
-        }
+  website = 'https://github.com/fbluemle/adbstart-plugin'
+  vcsUrl  = 'https://github.com/fbluemle/adbstart-plugin'
+  plugins {
+    adbStart {
+      id = 'org.fbluemle.adbstart'
+      implementationClass = 'org.fbluemle.adbstart.AdbStartPlugin'
+      displayName = 'ADB Start for Android/RN'
+      description = 'Adds start<Variant> tasks that install & launch the correct Android applicationId via adb.'
+      tags.set(['android','react-native','adb','variants'])
     }
-}
-
-// Add a source set for the functional test suite
-sourceSets {
-    functionalTest {
-    }
-}
-
-configurations.functionalTestImplementation.extendsFrom(configurations.testImplementation)
-configurations.functionalTestRuntimeOnly.extendsFrom(configurations.testRuntimeOnly)
-
-tasks.register('functionalTest', Test) {
-    testClassesDirs = sourceSets.functionalTest.output.classesDirs
-    classpath = sourceSets.functionalTest.runtimeClasspath
-    useJUnitPlatform()
-}
-
-gradlePlugin.testSourceSets.add(sourceSets.functionalTest)
-
-tasks.named('check') {
-    dependsOn(tasks.functionalTest)
-}
-
-tasks.named('test') {
-    useJUnitPlatform()
+  }
 }
