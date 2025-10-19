@@ -1,43 +1,47 @@
 package org.fbluemle;
 
+import org.gradle.testkit.runner.BuildResult;
+import org.gradle.testkit.runner.GradleRunner;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.io.FileWriter;
 
-import org.gradle.testkit.runner.GradleRunner;
-import org.gradle.testkit.runner.BuildResult;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertTrue;
 
-class AdbstartPluginPluginFunctionalTest {
-    @TempDir
-    File projectDir;
+public class AdbstartPluginPluginFunctionalTest {
+    @Rule
+    public TemporaryFolder testProjectDir = new TemporaryFolder();
 
-    private File getBuildFile() {
-        return new File(projectDir, "build.gradle");
+    private File getBuildFile() throws IOException {
+        return testProjectDir.newFile("build.gradle");
     }
 
-    private File getSettingsFile() {
-        return new File(projectDir, "settings.gradle");
+    private File getSettingsFile() throws IOException {
+        return testProjectDir.newFile("settings.gradle");
     }
 
-    @Test void canRunTask() throws IOException {
+    @Test
+    public void appliesPluginAndBuildsHelpTask() throws IOException {
         writeString(getSettingsFile(), "");
         writeString(getBuildFile(),
-            "plugins {" +
-            "  id('org.example.greeting')" +
-            "}");
+                "plugins {\n" +
+                "    id 'org.fbluemle.adbstart'\n" +
+                "}\n");
 
-        GradleRunner runner = GradleRunner.create();
-        runner.forwardOutput();
-        runner.withPluginClasspath();
-        runner.withArguments("greeting");
-        runner.withProjectDir(projectDir);
-        BuildResult result = runner.build();
+        BuildResult result = GradleRunner.create()
+                .withProjectDir(testProjectDir.getRoot())
+                .withArguments("help")
+                .withPluginClasspath()
+                .forwardOutput()
+                .build();
 
-        assertTrue(result.getOutput().contains("Hello from plugin 'org.example.greeting'"));
+        // If the plugin applies cleanly, the 'help' task should complete successfully
+        assertTrue(result.getOutput().contains("BUILD SUCCESSFUL"));
     }
 
     private void writeString(File file, String string) throws IOException {
