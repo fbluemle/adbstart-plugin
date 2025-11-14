@@ -40,8 +40,17 @@ public class AdbStartPlugin implements Plugin<@NotNull Project> {
                                     Method getApplicationId = variant.getClass().getMethod("getApplicationId");
                                     String applicationId = String.valueOf(getApplicationId.invoke(variant));
 
-                                    Method getNamespace = variant.getClass().getMethod("getNamespace");
-                                    String namespace = String.valueOf(getNamespace.invoke(variant));
+                                    // Try to get namespace from android extension, fall back to applicationId if not available
+                                    String namespace = applicationId;
+                                    try {
+                                        Method getNamespace = android.getClass().getMethod("getNamespace");
+                                        Object namespaceObj = getNamespace.invoke(android);
+                                        if (namespaceObj != null) {
+                                            namespace = String.valueOf(namespaceObj);
+                                        }
+                                    } catch (NoSuchMethodException e) {
+                                        // namespace not available in older AGP versions, use applicationId
+                                    }
 
                                     String activity = ext.getActivity();
                                     String activityClassName = (activity != null && activity.startsWith("."))
