@@ -1,4 +1,4 @@
-package org.fbluemle;
+package org.fbluemle.adbstart;
 
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
@@ -13,7 +13,7 @@ import java.io.Writer;
 
 import static org.junit.Assert.assertTrue;
 
-public class AdbstartPluginPluginFunctionalTest {
+public class AdbstartPluginFunctionalTest {
     @Rule
     public TemporaryFolder testProjectDir = new TemporaryFolder();
 
@@ -30,8 +30,8 @@ public class AdbstartPluginPluginFunctionalTest {
         writeString(getSettingsFile(), "");
         writeString(getBuildFile(),
                 "plugins {\n" +
-                "    id 'org.fbluemle.adbstart'\n" +
-                "}\n");
+                        "    id 'org.fbluemle.adbstart'\n" +
+                        "}\n");
 
         BuildResult result = GradleRunner.create()
                 .withProjectDir(testProjectDir.getRoot())
@@ -40,7 +40,6 @@ public class AdbstartPluginPluginFunctionalTest {
                 .forwardOutput()
                 .build();
 
-        // If the plugin applies cleanly, the 'help' task should complete successfully
         assertTrue(result.getOutput().contains("BUILD SUCCESSFUL"));
     }
 

@@ -12,8 +12,7 @@ import java.util.List;
 public class AdbStartPlugin implements Plugin<Project> {
     @Override
     public void apply(Project project) {
-        AdbStartExtension ext = project.getExtensions()
-                .create("adbStart", AdbStartExtension.class);
+        AdbStartExtension ext = project.getExtensions().create("adbStart", AdbStartExtension.class);
 
         project.getPlugins().withId("com.android.application", p -> {
             try {
