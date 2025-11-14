@@ -3,13 +3,14 @@ package org.fbluemle.adbstart;
 import org.gradle.api.Action;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AdbStartPlugin implements Plugin<Project> {
+public class AdbStartPlugin implements Plugin<@NotNull Project> {
     @Override
     public void apply(Project project) {
         AdbStartExtension ext = project.getExtensions().create("adbStart", AdbStartExtension.class);
@@ -21,7 +22,7 @@ public class AdbStartPlugin implements Plugin<Project> {
                 Object variants = getApplicationVariants.invoke(android);
                 Method all = variants.getClass().getMethod("all", Action.class);
 
-                all.invoke(variants, (Action<Object>) variant -> {
+                all.invoke(variants, (Action<@NotNull Object>) variant -> {
                     try {
                         Method getName = variant.getClass().getMethod("getName");
                         String variantName = String.valueOf(getName.invoke(variant));
@@ -38,9 +39,13 @@ public class AdbStartPlugin implements Plugin<Project> {
                                 try {
                                     Method getApplicationId = variant.getClass().getMethod("getApplicationId");
                                     String applicationId = String.valueOf(getApplicationId.invoke(variant));
+
+                                    Method getNamespace = variant.getClass().getMethod("getNamespace");
+                                    String namespace = String.valueOf(getNamespace.invoke(variant));
+
                                     String activity = ext.getActivity();
-                                    String activityQualified = (activity != null && activity.startsWith("."))
-                                            ? applicationId + activity : activity;
+                                    String activityClassName = (activity != null && activity.startsWith("."))
+                                            ? namespace + activity : activity;
 
                                     List<String> cmd = new ArrayList<>();
                                     String adb = (ext.getAdbPath() == null || ext.getAdbPath().isBlank()) ? "adb" : ext.getAdbPath();
@@ -52,9 +57,9 @@ public class AdbStartPlugin implements Plugin<Project> {
                                     if (ext.getExtraAmArgs() != null && !ext.getExtraAmArgs().isBlank()) {
                                         cmd.addAll(Arrays.asList(ext.getExtraAmArgs().trim().split("\\s+")));
                                     }
-                                    cmd.addAll(Arrays.asList("-n", applicationId + "/" + activityQualified));
+                                    cmd.addAll(Arrays.asList("-n", applicationId + "/" + activityClassName));
 
-                                    project.getLogger().lifecycle("Starting " + applicationId + "/" + activityQualified + " ...");
+                                    project.getLogger().lifecycle("Starting " + applicationId + "/" + activityClassName + " ...");
                                     try {
                                         Process process = new ProcessBuilder(cmd).inheritIO().start();
                                         int exit = process.waitFor();
